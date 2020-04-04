@@ -14,14 +14,18 @@ require (
 	github.com/gin-gonic/contrib v0.0.0-20191209060500-d6e26eeaa607 // indirect
 	github.com/gin-gonic/gin v1.6.2
 	github.com/go-errors/errors v1.0.1
+	github.com/go-redis/redis v6.15.7+incompatible
 	github.com/gorilla/context v1.1.1
 	github.com/gorilla/sessions v1.2.0
 	github.com/lestrrat-go/file-rotatelogs v2.3.0+incompatible
 	github.com/lestrrat-go/strftime v1.0.1 // indirect
+	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/rcrowley/go-metrics v0.0.0-20200313005456-10cdbea86bc0
 	github.com/rifflock/lfshook v0.0.0-20180920164130-b9218ef580f5
 	github.com/robfig/go-cache v0.0.0-20130306151617-9fc39e0dbf62
 	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.5.0
 	github.com/stretchr/testify v1.4.0
+	golang.org/x/time v0.0.0-20191024005414-555d28b269f0
 )

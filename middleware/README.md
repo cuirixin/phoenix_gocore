@@ -16,3 +16,9 @@
     - [x] sentry - sentry监控
     - [x] cors - 跨域访问控制（Cross-Origin Resource Sharing）
     - [x] csrf - 跨站请求伪造（Cross-site request forgery）
+    - [x] revision - 版本号（Response Headers: X-Revision-Id）
+    - [x] location - 暴露服务器的hostname and scheme
+    - [x] limit - 访问请求并发限制（接口粒度）
+    - [x] limit-by-key - 访问请求并发限制（自定义粒度）
+    - [x] redis-ip-limiter - 基于Redis的全局访问请求并发限制
+    - [x] access-limit - 请求来源限制
