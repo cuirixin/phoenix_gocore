@@ -1,4 +1,4 @@
-module phoenix_gocore
+module github.com/cuirixin/phoenix_gocore
 
 go 1.14
 
