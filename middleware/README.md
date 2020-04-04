@@ -9,4 +9,6 @@
         - [x] ginlog - 请求日志
         - [x] rotate - 请求日志，自动切分
     - [x] gin-nice-recovery - 优雅恢复
-    - [ ] request_id - X-Requset—Id请求ID，方便日志trace
+    - [x] request_id - X-Requset—Id请求ID，方便日志trace
+    - [x] jwt - TokenAuth
+    - [x] expvar - expvar监控
