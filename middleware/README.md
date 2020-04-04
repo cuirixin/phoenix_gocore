@@ -14,4 +14,5 @@
     - [x] expvar - expvar监控
     - [x] secure - 访问安全
     - [x] sentry - sentry监控
-    - [x] cors - 跨域访问控制(Cross-Origin Resource Sharing)
+    - [x] cors - 跨域访问控制（Cross-Origin Resource Sharing）
+    - [x] csrf - 跨站请求伪造（Cross-site request forgery）

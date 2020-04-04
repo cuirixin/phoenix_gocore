@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/gin-gonic/contrib/cache"
 	"github.com/gin-gonic/gin"
 	"time"
+
+	"github.com/cuirixin/phoenix_gocore/middleware/gin/cache"
 )
 
 func main() {
