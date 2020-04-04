@@ -22,3 +22,5 @@
     - [x] limit-by-key - 访问请求并发限制（自定义粒度）
     - [x] redis-ip-limiter - 基于Redis的全局访问请求并发限制
     - [x] access-limit - 请求来源限制
+    - [x] stats - API请求统计
+    - [x] gindump - Debug模式下日志输出
