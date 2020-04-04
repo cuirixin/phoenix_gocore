@@ -5,6 +5,7 @@ go 1.14
 require (
 	github.com/boj/redistore v0.0.0-20180917114910-cd5dcc76aeff
 	github.com/bradfitz/gomemcache v0.0.0-20190913173617-a41fca850d0b
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fatih/color v1.9.0
 	github.com/garyburd/redigo v1.6.0
 	github.com/gin-gonic/contrib v0.0.0-20191209060500-d6e26eeaa607
