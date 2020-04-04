@@ -17,5 +17,6 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rifflock/lfshook v0.0.0-20180920164130-b9218ef580f5
 	github.com/robfig/go-cache v0.0.0-20130306151617-9fc39e0dbf62
+	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.5.0
 )

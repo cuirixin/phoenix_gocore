@@ -100,6 +100,7 @@ func LoggerToFile(logFilePath, logFileName string) gin.HandlerFunc {
 			"ip"      : clientIP,
 			"method"  : reqMethod,
 			"uri"     : reqUri,
+			"req_id"  : c.Writer.Header().Get("X-Request-Id"), // 依赖于request_id中间件
 		})
 		if len(c.Errors) > 0 {
 			// Append error field if this is an erroneous request.
@@ -168,7 +169,8 @@ func LoggerToFileWithReqRes(logFilePath, logFileName string) gin.HandlerFunc {
 			"ip"      : clientIP,
 			"method"  : reqMethod,
 			"uri"     : reqUri,
-			"req_body"     : string(req_body),
+			"req_id"  : c.Writer.Header().Get("X-Request-Id"), // 依赖于request_id中间件
+			"req_body": string(req_body),
 			"res"     : strBody,
 		})
 		if len(c.Errors) > 0 {
