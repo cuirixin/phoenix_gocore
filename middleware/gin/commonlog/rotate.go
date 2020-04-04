@@ -2,7 +2,6 @@ package commonlog
 
 import (
 	"bytes"
-	putils "github.com/cuirixin/phoenix_gocore/utils"
 	"github.com/fatih/color"
 	"github.com/gin-gonic/gin"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
@@ -28,7 +27,7 @@ func initLogger(logFilePath, logFileName string) {
 	//logFilePath := conf.Conf.Log.ApiFilePath
 	//logFileName := conf.Conf.Log.ApiFileName
 
-	fileName := path.Join(putils.CallerSourcePath(), logFilePath, logFileName)
+	fileName := path.Join(logFilePath, logFileName)
 	color.Green("日志文件路径: %s", fileName)
 
 	// 禁止logrus的输出
