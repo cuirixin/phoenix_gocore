@@ -1,20 +1,24 @@
 package jwt
 
 import (
-	jwt_lib "github.com/dgrijalva/jwt-go"
-	"github.com/dgrijalva/jwt-go/request"
+	"errors"
 	"github.com/gin-gonic/gin"
+	"github.com/cuirixin/phoenix_gocore/libs/jwtoken"
 )
 
-func Auth(secret string) gin.HandlerFunc {
+func Auth(tokenKey string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		_, err := request.ParseFromRequest(c.Request, request.OAuth2Extractor, func(token *jwt_lib.Token) (interface{}, error) {
-			b := ([]byte(secret))
-			return b, nil
-		})
-
-		if err != nil {
-			c.AbortWithError(401, err)
+		tokenString := c.Request.Header.Get(tokenKey)
+		println("auth-token: ", tokenString)
+		if tokenString == "" {
+			c.AbortWithError(401, errors.New("token required"))
+			return
 		}
+		succ, uid := jwtoken.JWTVerify(tokenString)
+		if succ == false {
+			c.AbortWithError(401, errors.New("token auth failed"))
+			return
+		}
+		c.Set("uid", uid)
 	}
 }

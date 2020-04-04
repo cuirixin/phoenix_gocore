@@ -6,7 +6,7 @@
 ** @Last Modified time: 2017-12-12 10:10:00
 ***********************************************/
 
-package libs
+package jwtoken
 
 import (
 	"time"
@@ -23,18 +23,18 @@ type MyCustomClaims struct {
 	jwt.StandardClaims
 }
 
-func JWTSign(uid string) (string, error) {
+func JWTSign(uid string, expiredDays int64) (string, error) {
 	// Create the Claims
 	claims := MyCustomClaims{
 		uid,
 		jwt.StandardClaims{
 				NotBefore: int64(time.Now().Unix()),
-				ExpiresAt: int64(time.Now().Unix() + 86400 * 15),
+				ExpiresAt: int64(time.Now().Unix() + 86400 * expiredDays),
 				Issuer:    "phoenix",
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(SecretKey), nil
+	return token.SignedString(SecretKey)
 }
 
 func JWTParse(tokenString string) (string, error) {
@@ -68,7 +68,7 @@ type MySuperCustomClaims struct {
 	jwt.StandardClaims
 }
 
-func SuperJWTSign(uid, deviceId, scope string) (string, error) {
+func SuperJWTSign(uid, deviceId, scope string, expiredDays int64) (string, error) {
 	// Create the Claims
 	claims := MySuperCustomClaims{
 		uid,
@@ -76,12 +76,12 @@ func SuperJWTSign(uid, deviceId, scope string) (string, error) {
 		scope,
 		jwt.StandardClaims{
 				NotBefore: int64(time.Now().Unix()),
-				ExpiresAt: int64(time.Now().Unix() + 86400 * 15),
+				ExpiresAt: int64(time.Now().Unix() + 86400 * expiredDays),
 				Issuer:    "phoenix",
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(SecretKey), nil
+	return token.SignedString(SecretKey)
 }
 
 func SuperJWTParse(tokenString string) (*MySuperCustomClaims, error) {
