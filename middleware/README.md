@@ -12,3 +12,6 @@
     - [x] request_id - X-Requset—Id请求ID，方便日志trace
     - [x] jwt - TokenAuth
     - [x] expvar - expvar监控
+    - [x] secure - 访问安全
+    - [x] sentry - sentry监控
+    - [x] cors - 跨域访问控制(Cross-Origin Resource Sharing)
