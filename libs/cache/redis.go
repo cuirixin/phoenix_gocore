@@ -179,3 +179,11 @@ func (c *RedisStore) invoke(f func(string, ...interface{}) (interface{}, error),
 		return err
 	}
 }
+
+func (c *RedisStore) GetConn() redis.Conn {
+	return c.pool.Get()
+}
+
+func (c *RedisStore) Close() error {
+	return c.pool.Close()
+}

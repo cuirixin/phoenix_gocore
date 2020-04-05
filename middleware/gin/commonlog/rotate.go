@@ -4,11 +4,8 @@ import (
 	"bytes"
 	"github.com/fatih/color"
 	"github.com/gin-gonic/gin"
-	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
-	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
-	"os"
 	"path"
 	"strings"
 	"time"
@@ -16,11 +13,17 @@ import (
 
 var logger *logrus.Logger
 
-func Info (module, msg string)  {
-	logger.WithFields(logrus.Fields{
-		"module"  : module,
-		"msg"     : msg,
-	}).Info()
+func Log() *logrus.Logger {
+	if logger == nil {
+		initDefaultLogger()
+	}
+	return logger
+}
+
+func initDefaultLogger()  {
+	logger = logrus.New()
+	logger.SetLevel(logrus.DebugLevel)
+	logger.AddHook(NewContextHook())
 }
 
 func initLogger(logFilePath, logFileName string) {
@@ -30,43 +33,17 @@ func initLogger(logFilePath, logFileName string) {
 	fileName := path.Join(logFilePath, logFileName)
 	color.Green("日志文件路径: %s", fileName)
 
-	// 禁止logrus的输出
-	src, err := os.OpenFile(os.DevNull, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
-	if err != nil {
-		color.Red("打开日志文件失败，#{err}")
-	}
-
 	// 实例化
 	logger = logrus.New()
-	// 设置输出
-	logger.Out = src
 	// 设置日志级别
 	logger.SetLevel(logrus.DebugLevel)
-	// 设置 rotatelogs
-	logWriter, err := rotatelogs.New(
-		// 分割后的文件名称
-		fileName + ".%Y-%m-%d-%H-%M.log",
-		// 生成软链，指向最新日志文件
-		rotatelogs.WithLinkName(fileName),
-		// 设置最大保存时间(7天)
-		rotatelogs.WithMaxAge(7*24*time.Hour),
-		// 设置日志切割时间间隔(1天)
-		rotatelogs.WithRotationTime(24*time.Hour),
-	)
-	writeMap := lfshook.WriterMap{
-		logrus.InfoLevel:  logWriter,
-		logrus.FatalLevel: logWriter,
-		logrus.DebugLevel: logWriter,
-		logrus.WarnLevel:  logWriter,
-		logrus.ErrorLevel: logWriter,
-		logrus.PanicLevel: logWriter,
-	}
-	lfHook := lfshook.NewHook(writeMap, &logrus.TextFormatter{ // JsonFormatter
-		TimestampFormat:"2006-01-02 15:04:05",
-	})
 
-	// 新增 Hook
-	logger.AddHook(lfHook)
+	// 新增行号和文件名Hook
+	logger.AddHook(NewContextHook())
+    // 自动切割文件Hook
+    logger.AddHook(NewLfsHook(fileName, 1000))
+
+
 
 }
 
@@ -131,7 +108,7 @@ func LoggerToFileWithReqRes(logFilePath, logFileName string) gin.HandlerFunc {
 	initLogger(logFilePath, logFileName)
 
 	return func(c *gin.Context) {
-		req_body, _ := ioutil.ReadAll(c.Request.Body)
+		reqBody, _ := ioutil.ReadAll(c.Request.Body)
 
 		// 开始时间
 		startTime := time.Now()
@@ -170,7 +147,7 @@ func LoggerToFileWithReqRes(logFilePath, logFileName string) gin.HandlerFunc {
 			"method"  : reqMethod,
 			"uri"     : reqUri,
 			"req_id"  : c.Writer.Header().Get("X-Request-Id"), // 依赖于request_id中间件
-			"req_body": string(req_body),
+			"req_body": string(reqBody),
 			"res"     : strBody,
 		})
 		if len(c.Errors) > 0 {

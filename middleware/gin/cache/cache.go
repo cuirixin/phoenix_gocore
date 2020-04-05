@@ -3,8 +3,8 @@ package cache
 import (
 	"bytes"
 	"crypto/sha1"
-	"errors"
 	"github.com/gin-gonic/gin"
+	pcache "github.com/cuirixin/phoenix_gocore/libs/cache"
 	"io"
 	"net/http"
 	"net/url"
@@ -12,28 +12,12 @@ import (
 )
 
 const (
-	DEFAULT              = time.Duration(0)
-	FOREVER              = time.Duration(-1)
-	CACHE_MIDDLEWARE_KEY = "gincontrib.cache"
+	CACHE_MIDDLEWARE_KEY = "phoenix_gocore.libs.cache"
 )
 
 var (
-	PageCachePrefix = "gincontrib.page.cache"
-	ErrCacheMiss    = errors.New("cache: key not found.")
-	ErrNotStored    = errors.New("cache: not stored.")
-	ErrNotSupport   = errors.New("cache: not support.")
+	PageCachePrefix = "phoenix_gocore.libs.page.cache"
 )
-
-type CacheStore interface {
-	Get(key string, value interface{}) error
-	Set(key string, value interface{}, expire time.Duration) error
-	Add(key string, value interface{}, expire time.Duration) error
-	Replace(key string, data interface{}, expire time.Duration) error
-	Delete(key string) error
-	Increment(key string, data uint64) (uint64, error)
-	Decrement(key string, data uint64) (uint64, error)
-	Flush() error
-}
 
 type responseCache struct {
 	status int
@@ -45,7 +29,7 @@ type cachedWriter struct {
 	gin.ResponseWriter
 	status  int
 	written bool
-	store   CacheStore
+	store   pcache.CacheStore
 	expire  time.Duration
 	key     string
 }
@@ -64,7 +48,7 @@ func urlEscape(prefix string, u string) string {
 	return buffer.String()
 }
 
-func newCachedWriter(store CacheStore, expire time.Duration, writer gin.ResponseWriter, key string) *cachedWriter {
+func newCachedWriter(store pcache.CacheStore, expire time.Duration, writer gin.ResponseWriter, key string) *cachedWriter {
 	return &cachedWriter{writer, 0, false, store, expire, key}
 }
 
@@ -101,14 +85,14 @@ func (w *cachedWriter) Write(data []byte) (int, error) {
 }
 
 // Cache Middleware
-func Cache(store *CacheStore) gin.HandlerFunc {
+func Cache(store *pcache.CacheStore) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Set(CACHE_MIDDLEWARE_KEY, store)
 		c.Next()
 	}
 }
 
-func SiteCache(store CacheStore, expire time.Duration) gin.HandlerFunc {
+func SiteCache(store pcache.CacheStore, expire time.Duration) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 		var cache responseCache
@@ -129,7 +113,7 @@ func SiteCache(store CacheStore, expire time.Duration) gin.HandlerFunc {
 }
 
 // Cache Decorator
-func CachePage(store CacheStore, expire time.Duration, handle gin.HandlerFunc) gin.HandlerFunc {
+func CachePage(store pcache.CacheStore, expire time.Duration, handle gin.HandlerFunc) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 		var cache responseCache
