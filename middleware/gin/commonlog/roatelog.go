@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
+	"mime"
 	"path"
 	"strings"
 	"time"
@@ -40,8 +41,8 @@ func initLogger(logFilePath, logFileName string) {
 
 	// 新增行号和文件名Hook
 	logger.AddHook(NewContextHook())
-    // 自动切割文件Hook
-    logger.AddHook(NewLfsHook(fileName, 1000))
+	// 自动切割文件Hook
+	logger.AddHook(NewLfsHook(fileName, 1000))
 
 
 
@@ -108,7 +109,15 @@ func LoggerToFileWithReqRes(logFilePath, logFileName string) gin.HandlerFunc {
 	initLogger(logFilePath, logFileName)
 
 	return func(c *gin.Context) {
-		reqBody, _ := ioutil.ReadAll(c.Request.Body)
+
+		// 打印RequestBody，目前只针对JSON格式数据
+		var reqBody []byte
+		ctGet := c.Request.Header.Get("Content-Type")
+		ct, _, _ := mime.ParseMediaType(ctGet)
+		switch ct {
+		case gin.MIMEJSON:
+			reqBody, _ = ioutil.ReadAll(c.Request.Body)
+		}
 
 		// 开始时间
 		startTime := time.Now()

@@ -8,6 +8,7 @@ import (
 
 const (
 	DATE_FORMAT = "y-m-d"
+	DATE_FORMAT_PURE = "ymd"
 	DATETIME_FORMAT = "y-m-d h:i:s"
 	TIME_FORMAT = "h:i:s"
 )
