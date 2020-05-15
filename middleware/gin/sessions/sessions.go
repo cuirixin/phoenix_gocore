@@ -66,6 +66,20 @@ func Sessions(name string, store Store) gin.HandlerFunc {
 	}
 }
 
+func Auth(AuthUserKey string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		session := Default(c)
+		if v := session.Get(AuthUserKey); v == "" || v == nil {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"code": http.StatusUnauthorized,
+				"msg": "登录已失效，请重新登录",
+			})
+			c.Abort()
+		}
+		c.Next()
+	}
+}
+
 type session struct {
 	name    string
 	request *http.Request

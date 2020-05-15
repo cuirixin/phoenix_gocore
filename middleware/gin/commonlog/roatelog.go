@@ -111,12 +111,16 @@ func LoggerToFileWithReqRes(logFilePath, logFileName string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		// 打印RequestBody，目前只针对JSON格式数据
+
 		var reqBody []byte
 		ctGet := c.Request.Header.Get("Content-Type")
 		ct, _, _ := mime.ParseMediaType(ctGet)
 		switch ct {
 		case gin.MIMEJSON:
-			reqBody, _ = ioutil.ReadAll(c.Request.Body)
+			buf, _ := ioutil.ReadAll(c.Request.Body)
+			rdr := ioutil.NopCloser(bytes.NewBuffer(buf))
+			c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(buf))
+			reqBody, _ = ioutil.ReadAll(rdr)
 		}
 
 		// 开始时间

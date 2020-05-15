@@ -28,8 +28,8 @@ func NewRateLimiterMiddleware(redisClient *redis.Client, key string, limit int, 
 
 		if len(reqs) >= limit {
 			c.AbortWithStatusJSON(http.StatusTooManyRequests, gin.H{
-				"status":  http.StatusTooManyRequests,
-				"message": "too many request",
+				"code":  http.StatusTooManyRequests,
+				"msg": "too many request",
 			})
 			return
 		}

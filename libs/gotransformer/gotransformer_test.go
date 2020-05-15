@@ -14,6 +14,7 @@ func TestGetValue(t *testing.T) {
 		args args
 		want reflect.Value
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := GetValue(tt.args.o); !reflect.DeepEqual(got, tt.want) {

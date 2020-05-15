@@ -9,7 +9,6 @@ By default, [http.ListenAndServe](https://golang.org/pkg/net/http/#ListenAndServ
 package main
 
 import (
-  "github.com/aviddiviner/gin-limit"
   "github.com/gin-gonic/gin"
 )
 

@@ -25,6 +25,7 @@ require (
 	github.com/gogather/iplocation v0.0.0-20160307055017-e8439d3c8570
 	github.com/gorilla/context v1.1.1
 	github.com/gorilla/sessions v1.2.0
+	github.com/jameskeane/bcrypt v0.0.0-20120420032655-c3cd44c1e20f
 	github.com/lestrrat-go/file-rotatelogs v2.3.0+incompatible
 	github.com/lestrrat-go/strftime v1.0.1 // indirect
 	github.com/mreiferson/go-httpclient v0.0.0-20160630210159-31f0106b4474
@@ -36,5 +37,6 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.5.0
 	github.com/stretchr/testify v1.4.0
+	golang.org/x/crypto v0.0.0-20200406173513-056763e48d71
 	golang.org/x/time v0.0.0-20191024005414-555d28b269f0
 )

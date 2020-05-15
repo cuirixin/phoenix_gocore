@@ -9,7 +9,7 @@ import (
 // IpLocation struct
 type IpLocation struct {
 	Key string
-	Il *iplocation.IpLocation
+	Il  *iplocation.IpLocation
 }
 
 // NewIpLocation init
@@ -21,7 +21,7 @@ func NewIpLocation(key string) *IpLocation {
 }
 
 func (il *IpLocation) GetIpLocation(ip string) (string, error) {
-	json, err := il.Location(ip)
+	json, err := il.Il.Location(ip)
 	if json == nil {
 		return "", errors.New("json is nil")
 	}
