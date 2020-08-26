@@ -6,20 +6,25 @@ import (
 )
 
 type QPSMonitor struct {
+	qpsLimit     int32
 	latestIndex  int32
 	delaySecond  int32
 	totalQueries []int32
 }
 
 func (p *QPSMonitor) Pulse() {
+	index := p.Update()
+	atomic.AddInt32(&p.totalQueries[index], 1)
+}
+
+func (p *QPSMonitor) Update() int32 {
 	index := int32(time.Now().Second()) % p.delaySecond
 
 	if p.latestIndex != index {
 		atomic.StoreInt32(&p.latestIndex, index)
 		atomic.StoreInt32(&p.totalQueries[p.latestIndex], 0)
 	}
-
-	atomic.AddInt32(&p.totalQueries[index], 1)
+	return index
 }
 
 func (p *QPSMonitor) QPS() int32 {
@@ -32,11 +37,22 @@ func (p *QPSMonitor) QPS() int32 {
 	return totalCount / (p.delaySecond - 1)
 }
 
-func NewQPSMonitor(delaySecond int32) *QPSMonitor {
+func (p *QPSMonitor) checkQPS() {
+	p.Pulse()
+	if p.qpsLimit > 0 {
+		for p.QPS() > p.qpsLimit {
+			time.Sleep(time.Millisecond * 10)
+			p.Update()
+		}
+	}
+}
+
+func NewQPSMonitor(delaySecond int32, qpsLimit int32) *QPSMonitor {
 	if delaySecond < 5 {
 		delaySecond = 5
 	}
 	monitor := QPSMonitor{
+		qpsLimit:     qpsLimit,
 		delaySecond:  delaySecond,
 		totalQueries: make([]int32, delaySecond),
 	}
