@@ -1,0 +1,11 @@
+{
+  "scan": false,
+  "scan_period": 60,
+  "production": false,
+  "level": "INFO",
+  "filename": "/usr/local/iphoenix/log/common.log",
+  "compress": false,
+  "max_size_mb": 50,
+  "max_backups": 20,
+  "max_age_days": 28
+}

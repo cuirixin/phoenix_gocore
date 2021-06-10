@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -156,6 +157,30 @@ func TestSubString(t *testing.T) {
 			if got := SubString(tt.args.str, tt.args.start, tt.args.length); got != tt.want {
 				t.Errorf("SubString() = %v, want %v", got, tt.want)
 			}
+		})
+	}
+}
+
+func TestRandomStr(t *testing.T) {
+	type args struct {
+		length int
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "随机字符串",
+			args: args{20},
+			want: "",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := AdvancedRandomStr(tt.args.length)
+			fmt.Println(got)
+
 		})
 	}
 }

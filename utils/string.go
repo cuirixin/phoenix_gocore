@@ -12,12 +12,13 @@ import (
 	"crypto/md5"
 	"encoding/base64"
 	"fmt"
+	"github.com/jameskeane/bcrypt"
 	"math/rand"
+	"net/url"
+	"sort"
 	"strconv"
 	"time"
-	"sort"
-	"net/url"
-	"github.com/jameskeane/bcrypt"
+	"unsafe"
 )
 
 func Md5(buf []byte) string {
@@ -66,18 +67,46 @@ func RandomStr(length int) string {
 	return string(result)
 }
 
-// #string到int  
-// int,err:=strconv.Atoi(string)  
-// #string到int64  
-// int64, err := strconv.ParseInt(string, 10, 64)  
-// #int到string  
-// string:=strconv.Itoa(int)  
-// #int64到string  
-// string:=strconv.FormatInt(int64,10)  
+const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+const (
+	letterIdxBits = 6                    // 6 bits to represent a letter index
+	letterIdxMask = 1<<letterIdxBits - 1 // All 1-bits, as many as letterIdxBits
+	letterIdxMax  = 63 / letterIdxBits   // # of letter indices fitting in 63 bits
+)
+
+var src = rand.NewSource(time.Now().UnixNano())
+
+func AdvancedRandomStr(n int) string {
+	// 参考 https://www.toutiao.com/i6861018877808083469/?tt_from=copy_link&utm_campaign=client_share&timestamp=1605235294&app=news_article_lite&utm_source=copy_link&utm_medium=toutiao_ios&use_new_style=1&req_id=2020111310413301012903213005014893&group_id=6861018877808083469
+	b := make([]byte, n)
+	// A src.Int63() generates 63 random bits, enough for letterIdxMax characters!
+	for i, cache, remain := n-1, src.Int63(), letterIdxMax; i >= 0; {
+		if remain == 0 {
+			cache, remain = src.Int63(), letterIdxMax
+		}
+		if idx := int(cache & letterIdxMask); idx < len(letterBytes) {
+			b[i] = letterBytes[idx]
+			i--
+		}
+		cache >>= letterIdxBits
+		remain--
+	}
+
+	return *(*string)(unsafe.Pointer(&b))
+}
+
+// #string到int
+// int,err:=strconv.Atoi(string)
+// #string到int64
+// int64, err := strconv.ParseInt(string, 10, 64)
+// #int到string
+// string:=strconv.Itoa(int)
+// #int64到string
+// string:=strconv.FormatInt(int64,10)
 
 // Map按key正序排序后拼接url
 func ParamsSortToUrl(params map[string]string, excludeParams []string) string {
-	var keys []string  
+	var keys []string
 	for k := range params {
 		exits := false
 		for i := range excludeParams {
@@ -87,13 +116,13 @@ func ParamsSortToUrl(params map[string]string, excludeParams []string) string {
 			}
 		}
 		if !exits {
-			keys = append(keys, k)  
+			keys = append(keys, k)
 		}
-	}  
+	}
 	sort.Strings(keys)
 	u := url.Values{}
 	for _, k := range keys {
-		fmt.Println("Key:", k, "Value:", params[k])  
+		fmt.Println("Key:", k, "Value:", params[k])
 		u.Set(k, params[k])
 	}
 

@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"regexp"
 )
 
@@ -68,11 +67,11 @@ func IsFloat(str string) bool {
 	return regexp.MustCompile(regular).MatchString(str)
 }
 
-func IsNumber_M_N(str string, m, n int) bool {
-	//只能输入m-n个数字
-	regular := fmt.Sprint("^\\d{%d,%d)$", m, n)
-	return regexp.MustCompile(regular).MatchString(str)
-}
+//func IsNumber_M_N(str string, m, n int) bool {
+//	//只能输入m-n个数字
+//	regular := fmt.Sprint("^\\d{%d,%d)$", m, n)
+//	return regexp.MustCompile(regular).MatchString(str)
+//}
 
 func IsSpecialSymbols(str string) bool {
 	//特殊符号开头
